@@ -7,9 +7,12 @@
 
 #include "targetver.h"
 
+#include <iostream>
 #include <stdio.h>
 #include <tchar.h>
-
+#include <Windows.h>
+#include <tlhelp32.h>
+#include <psapi.h>
 
 
 // TODO: reference additional headers your program requires here
