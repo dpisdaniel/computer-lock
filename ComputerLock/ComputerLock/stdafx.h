@@ -8,6 +8,7 @@
 #include "targetver.h"
 
 #include <iostream>
+#include <string>
 #include <stdio.h>
 #include <tchar.h>
 #include <Windows.h>
