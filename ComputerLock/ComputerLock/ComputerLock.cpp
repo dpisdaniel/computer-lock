@@ -5,8 +5,12 @@
 
 using namespace std;
 
+const string TAG = "ComputerLock";
+
 class ProcessHandler {
 	public:
+		const string CTAG = ".ProcessHandler";
+
 		ProcessHandler() {
 			cout << "Process handler object built" << endl;
 			DWORD bytesReturned;
@@ -22,10 +26,11 @@ class ProcessHandler {
 		void DetectNewProcess();
 
 		void MonitorProcesses() {
+			const string MTAG = ".MonitorProcesses";
 			// Starts by checking for the potential of all the currently opened processes
 			for (int i = 0; i < numberOfProcessIdentifiers; i++) {
 				HANDLE* currentProcess = NULL;
-				if (checkProcessPotential(this->allProcessIdentifiers[i], currentProcess)) {
+				if (CheckProcessPotential(this->allProcessIdentifiers[i], currentProcess)) {
 					cout << currentProcess << " " << &currentProcess <<endl;
 					InjectHookDLL(currentProcess);
 				}
@@ -39,7 +44,8 @@ class ProcessHandler {
 		checks if files can potentially be sent from the process related to the given processID. returns true if the process has that potential
 		and false otherwise. outputs either potential process handle back to hProcess if the process has that potential or null if it doesn't. 
 		*/
-		BOOL checkProcessPotential(DWORD processID, HANDLE*& hProcess) {
+		BOOL CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
+			const string MTAG = ".CheckProcessPotential";
 			TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
 			HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, processID);
 			// Get the process name.
@@ -55,9 +61,9 @@ class ProcessHandler {
 				}
 
 				// Print the process name and identifier.
+				_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
 				if (_tcscmp(szProcessName, _T("firefox.exe")) == 0) {
 					hProcess = (HANDLE*)processHandle;
-					_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
 					return true;
 				}
 			}
@@ -72,6 +78,7 @@ class ProcessHandler {
 
 		string GetLastErrorAsString()
 		{
+			const string MTAG = ".GetLastErrorAsString";
 			//Get the error message, if any.
 			DWORD errorMessageID = GetLastError();
 			if (errorMessageID == 0)
@@ -91,6 +98,7 @@ class ProcessHandler {
 
 		int InjectHookDLL(HANDLE hProcess)
 		{
+			const string MTAG = ".InjectHookDLL";
 			cout << "hey im here " << endl;
 			HANDLE hThread;
 			char  szLibPath[_MAX_PATH]; // size of the library path
