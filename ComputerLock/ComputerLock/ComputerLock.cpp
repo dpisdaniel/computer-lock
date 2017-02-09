@@ -28,7 +28,7 @@ class ProcessHandler {
 		void MonitorProcesses() {
 			const string MTAG = ".MonitorProcesses";
 			// Starts by checking for the potential of all the currently opened processes
-			for (int i = 0; i < numberOfProcessIdentifiers; i++) {
+			for (unsigned long int i = 0; i < numberOfProcessIdentifiers; i++) {
 				HANDLE* currentProcess = NULL;
 				if (CheckProcessPotential(this->allProcessIdentifiers[i], currentProcess)) {
 					cout << currentProcess << " " << &currentProcess <<endl;
@@ -68,7 +68,7 @@ class ProcessHandler {
 				}
 			}
 			else
-				cout << "Couldn't get information on PID " << processID << ", error: " << GetLastErrorAsString() << endl;
+				cout << "Couldn't get information on PID " << processID << ", error: " << GetLastErrorAsString(GetLastError()) << endl;
 			
 			// Releases the handle to the process.
 			CloseHandle(processHandle);
@@ -76,11 +76,10 @@ class ProcessHandler {
 			return false;
 		}
 
-		string GetLastErrorAsString()
+		string GetLastErrorAsString(DWORD errorMessageID)
 		{
 			const string MTAG = ".GetLastErrorAsString";
 			//Get the error message, if any.
-			DWORD errorMessageID = GetLastError();
 			if (errorMessageID == 0)
 				return string(); //No error message has been recorded
 
@@ -112,7 +111,7 @@ class ProcessHandler {
 			// Writes szLibPath to the allocated memory
 			pLibRemote = VirtualAllocEx(hProcess, NULL, sizeof(szLibPath), MEM_COMMIT, PAGE_READWRITE);
 			if (pLibRemote == NULL) {
-				cout << GetLastErrorAsString() << endl;
+				cout << GetLastErrorAsString(GetLastError()) << endl;
 				return false;
 			}
 			WriteProcessMemory(hProcess, pLibRemote, (void*)szLibPath, sizeof(szLibPath), NULL);
