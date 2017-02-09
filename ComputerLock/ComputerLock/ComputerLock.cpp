@@ -31,7 +31,7 @@ class ProcessHandler {
 			for (unsigned long int i = 0; i < numberOfProcessIdentifiers; i++) {
 				HANDLE* currentProcess = NULL;
 				if (CheckProcessPotential(this->allProcessIdentifiers[i], currentProcess)) {
-					cout << currentProcess << " " << &currentProcess <<endl;
+					cout << currentProcess << " " << &currentProcess << endl;
 					InjectHookDLL(currentProcess);
 				}
 			}
@@ -62,7 +62,7 @@ class ProcessHandler {
 
 				// Print the process name and identifier.
 				_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
-				if (_tcscmp(szProcessName, _T("firefox.exe")) == 0) {
+				if (_tcscmp(szProcessName, _T("chrome.exe")) == 0) {
 					hProcess = (HANDLE*)processHandle;
 					return true;
 				}
@@ -102,10 +102,10 @@ class ProcessHandler {
 			HANDLE hThread;
 			char  szLibPath[_MAX_PATH]; // size of the library path
 			void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
-
 			HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-			strcpy_s(szLibPath, "C:\\Windows\\Trampoline.dll");
+			strcpy_s(szLibPath, "D:\\Users\\User\\Documents\\Visual Studio 2015\\Projects\\computer-lock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
+			cout << szLibPath << endl;
 
 			// Allocates memory in the remote process for szLibPath and then
 			// Writes szLibPath to the allocated memory

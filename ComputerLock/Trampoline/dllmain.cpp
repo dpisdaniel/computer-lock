@@ -29,7 +29,10 @@ HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD d
 }
 
 void AttachHook() {
-
+	if (Mhook_SetHook((PVOID*)&ActualCreateFile, HookCreateFile) == false)
+	{
+		MessageBoxA(NULL, (LPCSTR)"Error hook", NULL, NULL);
+	}
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
