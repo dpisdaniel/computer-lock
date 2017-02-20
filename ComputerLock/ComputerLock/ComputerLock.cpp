@@ -62,7 +62,7 @@ class ProcessHandler {
 
 				// Print the process name and identifier.
 				_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
-				if (_tcscmp(szProcessName, _T("chrome.exe")) == 0) {
+				if (_tcscmp(szProcessName, _T("firefox.exe")) == 0) {
 					hProcess = (HANDLE*)processHandle;
 					return true;
 				}
@@ -104,7 +104,7 @@ class ProcessHandler {
 			void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
 			HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-			strcpy_s(szLibPath, "D:\\Users\\User\\Documents\\Visual Studio 2015\\Projects\\computer-lock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
+			strcpy_s(szLibPath, "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\Debug\\Trampoline.dll");
 			cout << szLibPath << endl;
 
 			// Allocates memory in the remote process for szLibPath and then
