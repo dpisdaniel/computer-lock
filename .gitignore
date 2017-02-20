@@ -27,4 +27,18 @@
 *.exe
 *.out
 *.app
-/ComputerLock
+
+# Wix project files
+*.wixproj
+
+*.tlog
+*.VC.db
+*.VC.VC.opendb
+
+/ComputerLock/**/Debug
+/ComputerLock/**/bin
+/ComputerLock/**/obj
+/ComputerLock/**/ipch
+/**/.vs
+
+

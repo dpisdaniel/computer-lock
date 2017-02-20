@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='Windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='ComputerLock' Id='*' UpgradeCode='488f7dfe-490f-4be2-bdd2-255b201fb64e'
+    Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Daniel'>
+
+    <Package Id='*' Keywords='Installer' Description="Daniel's ComputerLock 1.0 Installer"
+      Comments='ComputerLock is mine bwahahaha' Manufacturer='Daniel'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Daniel's ComputerLock 1.0 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='Daniel' Name='Daniel'>
+          <Directory Id='INSTALLDIR' Name='ComputerLock 1.0'>
+
+            <Component Id='MainExecutable' Guid='9ad54690-afbe-4827-81ee-c713e1cb5648'>
+              <File Id='ComputerLockEXE' Name='ComputerLock.exe' DiskId='1' Source='ComputerLock.exe' KeyPath='yes'>
+                <Shortcut Id="startmenuComputerLock" Directory="ProgramMenuDir" Name="ComputerLock 1.0" WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
+                <Shortcut Id="desktopComputerLock" Directory="DesktopFolder" Name="ComputerLock 1.0" WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
+              </File>
+            </Component>
+
+            <Component Id='InjectionLibrary' Guid='072323ae-edeb-4640-84de-9e979751f622'>
+              <File Id='InjectedDLL' Name='Trampoline.dll' DiskId='1' Source='Trampoline.dll' KeyPath='yes' />
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="ComputerLock 1.0">
+          <Component Id="ProgramMenuDir" Guid="45fe27b2-7725-4ec1-ba61-c6b4762aead5">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainExecutable' />
+      <ComponentRef Id='InjectionLibrary' />
+      <ComponentRef Id='ProgramMenuDir' />
+    </Feature>
+
+    <Icon Id="ComputerLock.exe" SourceFile="ComputerLock.exe" />
+
+  </Product>
+</Wix>
