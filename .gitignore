@@ -29,7 +29,7 @@
 *.app
 
 # Wix project files
-*.wixproj
+# woopsi poopsi *.wixproj
 
 *.tlog
 *.VC.db
