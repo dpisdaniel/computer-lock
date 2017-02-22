@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="ComputerLock" Language="1033" Version="1.0.0.0" Manufacturer="Daniel" UpgradeCode="654d67a0-e8b5-44c6-b550-80c0971cd1d8">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+  
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="ComputerLock" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ProgramMenuDir" />
+		</Feature>
+
+    <Icon Id="ComputerLock.exe" SourceFile="ComputerLock.exe" />
+	</Product>
+  
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="ComputerLock" />
+			</Directory>
+      
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="ComputerLock">
+          <Component Id="ProgramMenuDir" Guid="5F6E800A-47E6-42E6-B4AD-5E5F708F3C68">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id='InjectedDLL' Guid='1B4B9F56-A7C3-4108-975E-21FC6F1AC3C3'>
+        <File Id='HookingDLL' Name='Trampoline.dll' DiskId='1' Source='Trampoline.dll' KeyPath='yes'/>
+			</Component>
+      <Component Id='MainExecutable' Guid='91FA53FD-7719-4B15-A4E5-292212FDDB05'>
+        <File Id='ComputerLockExe' Name='ComputerLock.exe' DiskId='1' Source ='ComputerLock.exe' KeyPath='yes'>
+          <Shortcut Id="startmenuComputerLock" Directory="ProgramMenuDir" Name="ComputerLock"
+            WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
+          <Shortcut Id="desktopComputerLock" Directory="DesktopFolder" Name="ComputerLock"
+            WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
+        </File>
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+
+  <Fragment>
+    <Condition Message="You need to be an administrator to install this product.">
+      Privileged
+    </Condition>
+  </Fragment>
+</Wix>

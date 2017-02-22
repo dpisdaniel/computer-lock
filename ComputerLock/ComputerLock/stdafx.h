@@ -5,6 +5,7 @@
 
 #pragma once
 
+#define _WIN32_DCOM
 #include "targetver.h"
 
 #include <iostream>
@@ -14,6 +15,9 @@
 #include <Windows.h>
 #include <tlhelp32.h>
 #include <psapi.h>
+#include <wbemidl.h>
+
+#pragma comment(lib, "wbemuuid.lib")
 
 
 // TODO: reference additional headers your program requires here
