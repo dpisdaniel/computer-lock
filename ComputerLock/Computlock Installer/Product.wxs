@@ -2,7 +2,7 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <Product Name='ComputerLock' Id='*' UpgradeCode='488f7dfe-490f-4be2-bdd2-255b201fb64e'
     Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Daniel'>
-
+    
     <Package Id='*' Keywords='Installer' Description="Daniel's ComputerLock 1.0 Installer"
       Comments='ComputerLock is mine bwahahaha' Manufacturer='Daniel'
       InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
@@ -10,6 +10,15 @@
     <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
     <Property Id='DiskPrompt' Value="Daniel's ComputerLock 1.0 Installation [1]" />
 
+    <Condition Message="You need to be an administrator to install this product.">
+      Privileged
+    </Condition>
+
+    <UIRef Id="WixUI_Mondo" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='Daniel' Name='Daniel'>
@@ -42,10 +51,12 @@
       <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
 
-    <Feature Id='Complete' Level='1'>
-      <ComponentRef Id='MainExecutable' />
-      <ComponentRef Id='InjectionLibrary' />
-      <ComponentRef Id='ProgramMenuDir' />
+    <Feature Id='Complete' Display='expand' Level='1' Title='Complete Package'  Description='The complete package.' ConfigurableDirectory='INSTALLDIR'>
+      <Feature Id='MainProgram' Title='Program' Description='The main executable.' Level='1'>
+        <ComponentRef Id='MainExecutable' />
+        <ComponentRef Id='InjectionLibrary' />
+        <ComponentRef Id='ProgramMenuDir' />
+      </Feature>
     </Feature>
 
     <Icon Id="ComputerLock.exe" SourceFile="ComputerLock.exe" />
