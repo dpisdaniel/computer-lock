@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 using namespace std;
+using namespace EventSink;
 
 const string TAG = "ComputerLock";
 
@@ -190,6 +191,29 @@ class ProcessCreationCallback {
 			cout << "Connected to WMI" << endl;
 			return 0;
 		}
+		int setWMIConnectionSecurity() {
+			hr = CoSetProxyBlanket(pSvc,
+				RPC_C_AUTHN_WINNT,
+				RPC_C_AUTHZ_NONE,
+				NULL,
+				RPC_C_AUTHN_LEVEL_CALL,
+				RPC_C_IMP_LEVEL_IMPERSONATE,
+				NULL,
+				EOAC_NONE
+			);
+			if (FAILED(hr))
+			{
+				cout << "Could not set proxy blanket. Error code = 0x"
+					<< hex << hr << endl;
+				pSvc->Release();
+				pLoc->Release();
+				CoUninitialize();
+				return 1;      // Program has failed.
+			}
+			cout << "WMI proxy blanket set" << endl;
+			return 0;
+		}
+
 };
 
 int main() {
