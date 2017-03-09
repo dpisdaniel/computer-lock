@@ -11,9 +11,8 @@ const string TAG = "ComputerLock";
 BSTR bstr;
 
 class ProcessHandler {
+	
 	public:
-		const string CTAG = ".ProcessHandler";
-
 		ProcessHandler() {
 			cout << "Process handler object built" << endl;
 			DWORD bytesReturned;
@@ -26,14 +25,14 @@ class ProcessHandler {
 			}
 		}
 
-		void DetectNewProcess();
+		
 
 		void MonitorOpenProcesses() {
 			const string MTAG = ".MonitorProcesses";
 			// Starts by checking for the potential of all the currently opened processes
 			for (unsigned long int i = 0; i < numberOfProcessIdentifiers; i++) {
 				HANDLE* currentProcess = NULL;
-				if (CheckProcessPotential(this->allProcessIdentifiers[i], currentProcess)) {
+				if (CheckProcessPotential(allProcessIdentifiers[i], currentProcess)) {
 					cout << currentProcess << " " << &currentProcess << endl;
 					InjectHookDLL(currentProcess);
 				}

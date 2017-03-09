@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "eventsink.h"
+#include "ProcessHandler.h"
 
 ULONG EventSink::AddRef(){
 	return InterlockedIncrement(&m_lRef);
@@ -55,16 +56,23 @@ HRESULT EventSink::Indicate(LONG lObjectCount, IWbemClassObject **apObjArray)
 			hr = str->QueryInterface(IID_IWbemClassObject, reinterpret_cast< void** >(&apObjArray[i]));
 			if (SUCCEEDED(hr))
 			{
+				LONG ProcessId = NULL;
 				_variant_t cn;
-				hr = apObjArray[i]->Get(L"Name", 0, &cn, NULL, NULL);
+				hr = apObjArray[i]->Get(L"ProcessId", 0, &cn, NULL, NULL);
 				if (SUCCEEDED(hr))
 				{
 					if ((cn.vt == VT_NULL) || (cn.vt == VT_EMPTY))
-						wcout << "Name : " << ((cn.vt == VT_NULL) ? "NULL" : "EMPTY") << endl;
-					else
-						wcout << "Name : " << cn.bstrVal << endl;
+						wcout << "ProcessId : " << ((cn.vt == VT_NULL) ? "NULL" : "EMPTY") << endl;
+					else {
+						wcout << "ProcessId : " << cn.lVal << endl;
+						ProcessId = cn.lVal;
+					}
 				}
 				VariantClear(&cn);
+				if (ProcessId != NULL) {
+					ProcessHandler procHandler;
+					procHandler.CheckSingleProcess(ProcessId);
+				}
 			}
 		}
 		else {
