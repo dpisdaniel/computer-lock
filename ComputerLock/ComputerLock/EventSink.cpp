@@ -79,6 +79,7 @@ HRESULT EventSink::Indicate(LONG lObjectCount, IWbemClassObject **apObjArray)
 			wprintf(L"Error in getting specified object\n");
 		}
 		VariantClear(&vtProp);
+		cout << "And moving on . . ." << endl;
 	}
 	return WBEM_S_NO_ERROR;
 }

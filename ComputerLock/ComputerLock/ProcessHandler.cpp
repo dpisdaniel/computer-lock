@@ -7,11 +7,11 @@ ProcessHandler::ProcessHandler() {
 
 void ProcessHandler::CheckOpenProcesses() {
 	const string MTAG = ".MonitorProcesses";
-	DWORD* numberOfProcessIdentifiers;
+	DWORD numberOfProcessIdentifiers = 0;
 	DWORD* allProcessIdentifiers;
-	allProcessIdentifiers = RetrieveOpenProcessesIDs(numberOfProcessIdentifiers); // Starts by retrieving the currently opened process IDs
+	allProcessIdentifiers = RetrieveOpenProcessesIDs(&numberOfProcessIdentifiers); // Starts by retrieving the currently opened process IDs
 	//Checks for the potential of all the currently opened processes
-	for (unsigned long int i = 0; i < *numberOfProcessIdentifiers; i++) {
+	for (unsigned long int i = 0; i < numberOfProcessIdentifiers; i++) {
 		HANDLE* currentProcess = NULL;
 		if (CheckProcessPotential(allProcessIdentifiers[i], currentProcess)) {
 			cout << currentProcess << " " << &currentProcess << endl;
@@ -23,13 +23,12 @@ void ProcessHandler::CheckOpenProcesses() {
 int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 {
 	const string MTAG = ".InjectHookDLL";
-	cout << "hey im here " << endl;
 	HANDLE hThread;
 	char  szLibPath[_MAX_PATH]; // size of the library path
 	void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
 	HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-	strcpy_s(szLibPath, "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\Debug\\Trampoline.dll");
+	strcpy_s(szLibPath, "D:\\Users\\User\\Documents\\Visual Studio 2015\\Projects\\computer-lock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
 	cout << szLibPath << endl;
 
 	// Allocates memory in the remote process for szLibPath and then
@@ -86,7 +85,7 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 
 		// Print the process name and identifier.
 		_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
-		if (_tcscmp(szProcessName, _T("firefox.exe")) == 0) {
+		if (_tcscmp(szProcessName, _T("chrome.exe")) == 0) {
 			hProcess = (HANDLE*)processHandle;
 			return true;
 		}
@@ -100,7 +99,7 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 	return false;
 }
 
-DWORD* ProcessHandler::RetrieveOpenProcessesIDs(DWORD*& numberOfProcessIdentifiers) {
+DWORD* ProcessHandler::RetrieveOpenProcessesIDs(DWORD* numberOfProcessIdentifiers) {
 	DWORD bytesReturned;
 	DWORD allProcessIdentifiers[1024];
 	if (!EnumProcesses(allProcessIdentifiers, sizeof(allProcessIdentifiers), &bytesReturned)) {
@@ -109,14 +108,26 @@ DWORD* ProcessHandler::RetrieveOpenProcessesIDs(DWORD*& numberOfProcessIdentifie
 	else {
 		*numberOfProcessIdentifiers = bytesReturned / sizeof(DWORD);
 	}
-	return allProcessIdentifiers;
+	DWORD* allProcessIdentifiersArrPointer = new DWORD[1024];
+	for (DWORD i = 0; i < *numberOfProcessIdentifiers; i++) {
+		allProcessIdentifiersArrPointer[i] = allProcessIdentifiers[i];
+	}
+	return allProcessIdentifiersArrPointer;
 }
 
 void ProcessHandler::CheckSingleProcess(DWORD ProcessID) {
 	HANDLE* hProcess = NULL;
 	if (CheckProcessPotential(ProcessID, hProcess)) {
-		cout << hProcess << " " << &hProcess << endl;
 		InjectHookDLL(hProcess);
+		cout << "I have returned" << endl;
 	}
-	cout << "Process " << ProcessID << " is safe" << endl;
+	else
+		cout << "Process " << ProcessID << " is safe" << endl;
+}
+
+wstring ProcessHandler::ExePath() {
+	wchar_t buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	wstring::size_type pos = wstring(buffer).find_last_of(TEXT("\\/"));
+	return wstring(buffer).substr(0, pos);
 }

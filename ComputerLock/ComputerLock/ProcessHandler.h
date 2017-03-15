@@ -16,7 +16,6 @@ public:
 	
 
 private:
-	DWORD numberOfProcessIdentifiers;
 
 	/*
 	checks if files can potentially be sent from the process related to the given processID. returns true if the process has that potential
@@ -31,5 +30,8 @@ private:
 	string GetLastErrorAsString(DWORD errorMessageID);
 
 	//Retrieves all the process IDs of the currently opened processes and puts them in the allProcessIdentifiers array
-	DWORD *RetrieveOpenProcessesIDs(DWORD*& numberOfProcessIdentifiers);
+	DWORD *RetrieveOpenProcessesIDs(DWORD* numberOfProcessIdentifiers);
+
+	//Retrieves the current working directory of the executable (without the executable's file name)
+	wstring ExePath();
 };

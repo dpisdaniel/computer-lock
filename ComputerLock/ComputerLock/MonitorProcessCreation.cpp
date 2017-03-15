@@ -25,7 +25,7 @@ int MonitorProcessCreation::InitializeCOMLibrary() {
 	if (FAILED(hr))
 	{
 		cout << "Failed to initialize COM library. Error code = 0x" << hex << hr << endl;
-		CleanUp();
+		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
 	hr = CoInitializeSecurity(
@@ -46,7 +46,7 @@ int MonitorProcessCreation::ObtainWMILocator() {
 	if (FAILED(hr))
 	{
 		cout << "Failed to create IWbemLocator object. Err code = 0x" << hex << hr << endl;
-		CleanUp();
+		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
 	return TRUE;
@@ -68,7 +68,7 @@ int MonitorProcessCreation::ConnectWMINamespace() {
 	if (FAILED(hr))
 	{
 		cout << "Could not connect. Error code = 0x" << hex << hr << endl;
-		CleanUp();
+		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
 
@@ -89,7 +89,7 @@ int MonitorProcessCreation::setWMIConnectionSecurity() {
 	if (FAILED(hr))
 	{
 		cout << "Could not set proxy blanket. Error code = 0x" << hex << hr << endl;
-		CleanUp();
+		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
 	cout << "WMI proxy blanket set" << endl;
@@ -115,22 +115,28 @@ int MonitorProcessCreation::ReceiveEventNotifications() {
 	if (FAILED(hr))
 	{
 		printf("ExecNotificationQueryAsync failed with = 0x%X\n", hr);
-		CleanUp();
+		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
-	Sleep(10000);
+	string input;
+	cout << "Enter anything to exit:" << endl;
+	cin >> input;
 
 	//hr = pSvc->CancelAsyncCall(pStubSink);
-
-	CleanUp();
+	cancelAsyncQuery = true;
+	CleanUp(cancelAsyncQuery);
 	return TRUE;
 }
 
-void MonitorProcessCreation::CleanUp() {
+void MonitorProcessCreation::CleanUp(BOOL cancelAsyncQuery) {
+	if (cancelAsyncQuery) {
+		pSvc->CancelAsyncCall(pStubSink);
+	}
 	pSink->Release(); // EventSink implementation pointer
 
-	if (pSvc != NULL)  // IWbemServices interface pointer
+	if (pSvc != NULL) { // IWbemServices interface pointer
 		pSvc->Release();
+	}
 
 	if (pLoc != NULL)  // IWbemLocator interface pointer
 		pLoc->Release();

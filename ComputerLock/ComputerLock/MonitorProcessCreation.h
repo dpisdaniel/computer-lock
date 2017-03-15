@@ -11,6 +11,7 @@ class MonitorProcessCreation {
 	IUnknown* pStubUnk = NULL;
 	EventSink* pSink = new EventSink;
 	IWbemObjectSink* pStubSink = NULL;
+	BOOL cancelAsyncQuery = false;
 
 public:
 	// Constructor for the class
@@ -35,5 +36,5 @@ private:
 	/* Deletes all the currently used interface pointers and
 	uninitializes the COM library for this process
 	*/
-	void CleanUp();
+	void CleanUp(BOOL cancelAsyncQuery);
 };
