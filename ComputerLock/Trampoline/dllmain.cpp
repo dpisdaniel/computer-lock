@@ -17,35 +17,13 @@ char* encode(const wchar_t* wstr, unsigned int codePage)
 	return encodedStr;
 }
 
-inline bool ends_with(std::string const & value, std::string const & ending)
-{
-	if (ending.size() > value.size()) return false;
-	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
 HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
 	char file_path[1024];
 	strcpy_s(file_path, encode(lpFileName, CP_UTF8)); //encode to utf-8
-	
-	if (ends_with(file_path, ".txt"))
+	if (strstr(file_path, ".txt"))
 	{
-		MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);
-		//atleast for now it will return a valid handle but pop a msg box when it gets here
-		//return INVALID_HANDLE_VALUE;
-		//Gets the attached process name, in order to figure out which windows process handles file transfers
-		
-		HANDLE processHandle = GetCurrentProcess();
-		TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
-		HMODULE hMod;
-		DWORD cbNeeded;
-		// Get the process name.
-		if (EnumProcessModules(processHandle, &hMod, sizeof(hMod), &cbNeeded))
-		{
-			GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
-		}
-		MessageBox(NULL, szProcessName, NULL, NULL);
-		return ActualCreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		return INVALID_HANDLE_VALUE;
 	}
 	return ActualCreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 }
@@ -61,6 +39,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
+		MessageBoxA(NULL, (LPCSTR)"okayy", NULL, NULL);
 		AttachHook();
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
