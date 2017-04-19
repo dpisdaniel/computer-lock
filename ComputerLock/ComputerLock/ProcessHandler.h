@@ -13,7 +13,12 @@ public:
 
 	//Checks a single process' danger potential
 	void CheckSingleProcess(DWORD ProcessID);
-	
+
+	//Enables or disables a privilege for a given access token
+	BOOL ProcessHandler::SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);	
+
+	//Turns the GetLastError method's output into a printable std::string
+	string GetLastErrorAsString(DWORD errorMessageID);
 
 private:
 
@@ -26,12 +31,10 @@ private:
 	//Injects our hook DLL into the given process handle
 	int InjectHookDLL(HANDLE hProcess);
 
-	//Turns the GetLastError method's output into a printable std::string
-	string GetLastErrorAsString(DWORD errorMessageID);
-
 	//Retrieves all the process IDs of the currently opened processes and puts them in the allProcessIdentifiers array
 	DWORD *RetrieveOpenProcessesIDs(DWORD* numberOfProcessIdentifiers);
 
 	//Retrieves the current working directory of the executable (without the executable's file name)
 	wstring ExePath();
+
 };

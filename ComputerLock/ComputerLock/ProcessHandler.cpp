@@ -16,6 +16,7 @@ void ProcessHandler::CheckOpenProcesses() {
 		if (CheckProcessPotential(allProcessIdentifiers[i], currentProcess)) {
 			cout << currentProcess << " " << &currentProcess << endl;
 			InjectHookDLL(currentProcess);
+			CloseHandle(currentProcess);
 		}
 	}
 }
@@ -28,7 +29,7 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
 	HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-	strcpy_s(szLibPath, "D:\\Users\\User\\Documents\\Visual Studio 2015\\Projects\\computer-lock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
+	strcpy_s(szLibPath, "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
 	cout << szLibPath << endl;
 
 	// Allocates memory in the remote process for szLibPath and then
@@ -41,7 +42,7 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	WriteProcessMemory(hProcess, pLibRemote, (void*)szLibPath, sizeof(szLibPath), NULL);
 
 
-	// Load ""DLL_hook_test".dll" into the remote process 
+	// Loads "Trampoline.dll" into the remote process 
 	// via CreateRemoteThread & LoadLibrary
 	cout << "Creating remote thread . . ." << endl;
 	hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA"), pLibRemote, 0, NULL);
@@ -71,24 +72,35 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 	const string MTAG = ".CheckProcessPotential";
 	TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
 	HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, processID);
-	// Get the process name.
 
 	if (NULL != processHandle)
 	{
 		HMODULE hMod;
 		DWORD cbNeeded;
 
+		// Get the process name.
 		if (EnumProcessModules(processHandle, &hMod, sizeof(hMod), &cbNeeded))
 		{
-			GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
+			if (!GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR))) {
+				cout << "Failed to retrieve the process name of process id " << processID << ". error: " << GetLastErrorAsString(GetLastError()) << endl;
+				CloseHandle(processHandle);
+				hProcess = nullptr;
+				return false;
+			}
+		}
+		else {
+			cout << "Failed to retrieve the module list of process id " << processID << ". error: " << GetLastErrorAsString(GetLastError()) << endl;
 		}
 
 		// Print the process name and identifier.
 		_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
-		if (_tcscmp(szProcessName, _T("chrome.exe")) == 0) {
+		if (_tcscmp(szProcessName, _T("notepad.exe")) == 0) {
 			hProcess = (HANDLE*)processHandle;
 			return true;
 		}
+		//For debugging allows monitoring of all the processes
+		hProcess = (HANDLE*)processHandle;
+		return true;
 	}
 	else
 		cout << "Couldn't get information on PID " << processID << ", error: " << GetLastErrorAsString(GetLastError()) << endl;
@@ -130,4 +142,53 @@ wstring ProcessHandler::ExePath() {
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	wstring::size_type pos = wstring(buffer).find_last_of(TEXT("\\/"));
 	return wstring(buffer).substr(0, pos);
+}
+
+BOOL ProcessHandler::SetPrivilege(
+	HANDLE hToken,          // access token handle
+	LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
+	BOOL bEnablePrivilege   // to enable or disable privilege
+)
+{
+	TOKEN_PRIVILEGES tp;
+	LUID luid;
+
+	if (!LookupPrivilegeValue(
+		NULL,            // lookup privilege on local system
+		lpszPrivilege,   // privilege to lookup 
+		&luid))        // receives LUID of privilege
+	{
+		cout << "LookupPrivilegeValue error: " << GetLastErrorAsString(GetLastError()) << endl;
+		return FALSE;
+	}
+
+	tp.PrivilegeCount = 1;
+	tp.Privileges[0].Luid = luid;
+	if (bEnablePrivilege)
+		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+	else
+		tp.Privileges[0].Attributes = 0;
+
+	// Enable the privilege or disable all privileges.
+
+	if (!AdjustTokenPrivileges(
+		hToken,
+		FALSE,
+		&tp,
+		sizeof(TOKEN_PRIVILEGES),
+		(PTOKEN_PRIVILEGES)NULL,
+		(PDWORD)NULL))
+	{
+		cout << "AdjustTokenPrivileges error: " << GetLastErrorAsString(GetLastError()) << endl;
+		return FALSE;
+	}
+
+	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
+
+	{
+		cout << "The token does not have the specified privilege" << endl;
+		return FALSE;
+	}
+
+	return TRUE;
 }
