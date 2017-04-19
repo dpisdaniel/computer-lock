@@ -4,8 +4,6 @@
 // are changed infrequently
 //
 
-#pragma once
-
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
@@ -14,6 +12,7 @@
 #include <stdio.h>
 #include <shlwapi.h>
 #include <iostream>
+#include <psapi.h>
 using namespace std;
 // Don't forget to include "Ws2_32.lib" in the library list.
 #include <winsock2.h> 

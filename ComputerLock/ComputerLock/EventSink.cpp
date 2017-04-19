@@ -64,7 +64,7 @@ HRESULT EventSink::Indicate(LONG lObjectCount, IWbemClassObject **apObjArray)
 					if ((cn.vt == VT_NULL) || (cn.vt == VT_EMPTY))
 						wcout << "ProcessId : " << ((cn.vt == VT_NULL) ? "NULL" : "EMPTY") << endl;
 					else {
-						wcout << "ProcessId : " << cn.lVal << endl;
+						//wcout << "ProcessId : " << cn.lVal << endl;
 						ProcessId = cn.lVal;
 					}
 				}
