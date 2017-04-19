@@ -209,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EventSink.h" />
+    <ClInclude Include="ExternalDriveMonitor.h" />
     <ClInclude Include="MonitorProcessCreation.h" />
     <ClInclude Include="ProcessHandler.h" />
     <ClInclude Include="stdafx.h" />
@@ -217,6 +218,7 @@
   <ItemGroup>
     <ClCompile Include="ComputerLock.cpp" />
     <ClCompile Include="EventSink.cpp" />
+    <ClCompile Include="ExternalDriveMonitor.cpp" />
     <ClCompile Include="MonitorProcessCreation.cpp" />
     <ClCompile Include="ProcessHandler.cpp" />
     <ClCompile Include="stdafx.cpp">
