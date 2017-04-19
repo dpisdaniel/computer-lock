@@ -43,8 +43,7 @@ int MonitorProcessCreation::InitializeCOMLibrary() {
 
 int MonitorProcessCreation::ObtainWMILocator() {
 	hr = CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *)&pLoc);
-	if (FAILED(hr))
-	{
+	if (FAILED(hr)) {
 		cout << "Failed to create IWbemLocator object. Err code = 0x" << hex << hr << endl;
 		CleanUp(cancelAsyncQuery);
 		return FALSE;

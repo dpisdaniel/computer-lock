@@ -14,7 +14,8 @@ public:
 	//Checks a single process' danger potential
 	void CheckSingleProcess(DWORD ProcessID);
 
-	//Enables or disables a privilege for a given access token
+	/*Sets a given privilege for the access token handle given according to the name of the privilege.
+	Enables or disables the privilege if bEnablePrivilege is True or False respectively*/
 	BOOL ProcessHandler::SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);	
 
 	//Turns the GetLastError method's output into a printable std::string

@@ -29,25 +29,6 @@ HRESULT EventSink::Indicate(LONG lObjectCount, IWbemClassObject **apObjArray)
 
 	for (int i = 0; i < lObjectCount; i++)
 	{
-		//IWbemClassObject * InstanceCreationEventInterface = apObjArray[i];
-		/*SAFEARRAY *pStrPropertyNames = nullptr;
-		InstanceCreationEventInterface->GetNames(NULL, WBEM_FLAG_ALWAYS, NULL, &pStrPropertyNames);
-		long lLower, lUpper;
-		BSTR PropName = NULL;
-		SafeArrayGetLBound(pStrPropertyNames, 1, &lLower);
-		SafeArrayGetUBound(pStrPropertyNames, 1, &lUpper);
-		cout << lUpper - lLower << endl;
-		for (long j = lLower; j < lUpper; j++) {
-			HRESULT hr = SafeArrayGetElement(
-				pStrPropertyNames,
-				&j,
-				&PropName);
-
-			wcout << PropName << endl;
-			SysFreeString(PropName);
-		}
-		SafeArrayDestroy(pStrPropertyNames);*/
-
 		_variant_t vtProp;
 		HRESULT hr;
 		hr = apObjArray[i]->Get(_bstr_t(L"TargetInstance"), 0, &vtProp, 0, 0); // vtProp will contain an IUnknown interface to call the Win32_Process class IWbemClassObject interface

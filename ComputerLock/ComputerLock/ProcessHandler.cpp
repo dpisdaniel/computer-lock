@@ -73,14 +73,12 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 	TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
 	HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, processID);
 
-	if (NULL != processHandle)
-	{
+	if (NULL != processHandle) {
 		HMODULE hMod;
 		DWORD cbNeeded;
 
 		// Get the process name.
-		if (EnumProcessModules(processHandle, &hMod, sizeof(hMod), &cbNeeded))
-		{
+		if (EnumProcessModules(processHandle, &hMod, sizeof(hMod), &cbNeeded)) {
 			if (!GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR))) {
 				cout << "Failed to retrieve the process name of process id " << processID << ". error: " << GetLastErrorAsString(GetLastError()) << endl;
 				CloseHandle(processHandle);
@@ -93,14 +91,14 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 		}
 
 		// Print the process name and identifier.
-		_tprintf(TEXT("%s  (PID: %u)\n"), szProcessName, processID);
+		wcout << szProcessName << " (PID: " << processID << ")" << endl;
 		if (_tcscmp(szProcessName, _T("notepad.exe")) == 0) {
 			hProcess = (HANDLE*)processHandle;
 			return true;
 		}
 		//For debugging allows monitoring of all the processes
-		hProcess = (HANDLE*)processHandle;
-		return true;
+		//hProcess = (HANDLE*)processHandle;
+		//return true;
 	}
 	else
 		cout << "Couldn't get information on PID " << processID << ", error: " << GetLastErrorAsString(GetLastError()) << endl;
@@ -144,19 +142,11 @@ wstring ProcessHandler::ExePath() {
 	return wstring(buffer).substr(0, pos);
 }
 
-BOOL ProcessHandler::SetPrivilege(
-	HANDLE hToken,          // access token handle
-	LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
-	BOOL bEnablePrivilege   // to enable or disable privilege
-)
-{
+BOOL ProcessHandler::SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege) {
 	TOKEN_PRIVILEGES tp;
 	LUID luid;
 
-	if (!LookupPrivilegeValue(
-		NULL,            // lookup privilege on local system
-		lpszPrivilege,   // privilege to lookup 
-		&luid))        // receives LUID of privilege
+	if (!LookupPrivilegeValue(NULL, lpszPrivilege, &luid))        
 	{
 		cout << "LookupPrivilegeValue error: " << GetLastErrorAsString(GetLastError()) << endl;
 		return FALSE;
@@ -170,22 +160,12 @@ BOOL ProcessHandler::SetPrivilege(
 		tp.Privileges[0].Attributes = 0;
 
 	// Enable the privilege or disable all privileges.
-
-	if (!AdjustTokenPrivileges(
-		hToken,
-		FALSE,
-		&tp,
-		sizeof(TOKEN_PRIVILEGES),
-		(PTOKEN_PRIVILEGES)NULL,
-		(PDWORD)NULL))
-	{
+	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES)NULL, (PDWORD)NULL)) {
 		cout << "AdjustTokenPrivileges error: " << GetLastErrorAsString(GetLastError()) << endl;
 		return FALSE;
 	}
 
-	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
-
-	{
+	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
 		cout << "The token does not have the specified privilege" << endl;
 		return FALSE;
 	}
