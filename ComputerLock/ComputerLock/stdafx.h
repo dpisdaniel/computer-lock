@@ -16,6 +16,7 @@
 #include <tlhelp32.h>
 #include <psapi.h>
 #include <wbemidl.h>
+#include <vector>
 
 #pragma comment(lib, "wbemuuid.lib")
 

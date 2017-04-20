@@ -8,9 +8,9 @@ class MonitorProcessCreation {
 	IWbemServices *pSvc = NULL;
 	// Use an unsecured apartment for security
 	IUnsecuredApartment* pUnsecApp = NULL;
-	IUnknown* pStubUnk = NULL;
-	EventSink* pSink = new EventSink;
-	IWbemObjectSink* pStubSink = NULL;
+	IUnknown *pStubUnk = NULL;
+	EventSink *pSink = new EventSink;
+	IWbemObjectSink *pStubSink = NULL;
 	BOOL cancelAsyncQuery = false;
 
 public:
