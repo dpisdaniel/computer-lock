@@ -60,3 +60,7 @@ BOOL SetPrivilegeByName(LPCTSTR lpszPrivilege, BOOL bEnablePrivilege) {
 	}
 	return SetPrivilegeByToken(hProcessToken, lpszPrivilege, bEnablePrivilege);
 }
+
+BOOL CompareFileMagic(HANDLE hFile, char* magicStr) {
+	return FALSE;
+}

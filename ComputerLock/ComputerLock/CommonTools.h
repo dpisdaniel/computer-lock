@@ -16,4 +16,4 @@ BOOL SetPrivilegeByName(LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);
 
 /*Compares the magic numbers of a file and a string representation of the magic number. Returns
 TRUE if the magic numbers are the same and FALSE otherwise*/
-BOOL CompareFileMagic(HANDLE hFile, char* magicStr)
+BOOL CompareFileMagic(HANDLE hFile, char* magicStr);
