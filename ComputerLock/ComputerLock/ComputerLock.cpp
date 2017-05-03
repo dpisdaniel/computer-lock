@@ -21,7 +21,7 @@ int main() {
 	BOOL privSet = FALSE;
 
 	LogicalDriveRetriever* driveRetriever = new LogicalDriveRetriever();
-	driveRetriever->MonitorDrive();
+	driveRetriever->MonitorDrive(_T("C:\\"));
 
 	if (SET_DEBUG_PRIVILEGE)
 		privSet = SetPrivilegeByName(SE_DEBUG_NAME, TRUE);

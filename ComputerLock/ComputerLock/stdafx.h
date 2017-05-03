@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+#include <string.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <Windows.h>
@@ -17,6 +18,7 @@
 #include <psapi.h>
 #include <wbemidl.h>
 #include <vector>
+#include <wchar.h>
 
 #pragma comment(lib, "wbemuuid.lib")
 

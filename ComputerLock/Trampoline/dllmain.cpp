@@ -30,7 +30,7 @@ HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD d
 	
 	if (ends_with(file_path, ".txt"))
 	{
-		MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);
+		//MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);
 		//atleast for now it will return a valid handle but pop a msg box when it gets here
 		//return INVALID_HANDLE_VALUE;
 		//Gets the attached process name, in order to figure out which windows process handles file transfers
