@@ -15,6 +15,7 @@ public:
 private:
 	vector<DWORD> logicalDrives;
 
+	BOOL checkAction(DWORD action);
 
 	void WaitForNewExternalDrives();
 
