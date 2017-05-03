@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ProcessHandler.h"
+#include "CommonTools.h"
 
 ProcessHandler::ProcessHandler() {
 	cout << "Process handler instance intialized" << endl;
@@ -47,25 +48,6 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	cout << "Creating remote thread . . ." << endl;
 	hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA"), pLibRemote, 0, NULL);
 	return true;
-}
-
-string ProcessHandler::GetLastErrorAsString(DWORD errorMessageID)
-{
-	const string MTAG = ".GetLastErrorAsString";
-	//Get the error message, if any.
-	if (errorMessageID == 0)
-		return string(); //No error message has been recorded
-
-	LPSTR messageBuffer = nullptr;
-	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-
-	string message(messageBuffer, size);
-
-	//Free the buffer.
-	LocalFree(messageBuffer);
-
-	return message;
 }
 
 BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
@@ -140,35 +122,4 @@ wstring ProcessHandler::ExePath() {
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	wstring::size_type pos = wstring(buffer).find_last_of(TEXT("\\/"));
 	return wstring(buffer).substr(0, pos);
-}
-
-BOOL ProcessHandler::SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege) {
-	TOKEN_PRIVILEGES tp;
-	LUID luid;
-
-	if (!LookupPrivilegeValue(NULL, lpszPrivilege, &luid))        
-	{
-		cout << "LookupPrivilegeValue error: " << GetLastErrorAsString(GetLastError()) << endl;
-		return FALSE;
-	}
-
-	tp.PrivilegeCount = 1;
-	tp.Privileges[0].Luid = luid;
-	if (bEnablePrivilege)
-		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-	else
-		tp.Privileges[0].Attributes = 0;
-
-	// Enable the privilege or disable all privileges.
-	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES)NULL, (PDWORD)NULL)) {
-		cout << "AdjustTokenPrivileges error: " << GetLastErrorAsString(GetLastError()) << endl;
-		return FALSE;
-	}
-
-	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
-		cout << "The token does not have the specified privilege" << endl;
-		return FALSE;
-	}
-
-	return TRUE;
 }

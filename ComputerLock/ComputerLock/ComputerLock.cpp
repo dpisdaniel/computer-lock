@@ -5,18 +5,12 @@
 #include "EventSink.h"
 #include "MonitorProcessCreation.h"
 #include "ProcessHandler.h"
+#include "CommonTools.h"
+#include "ExternalDriveMonitor.h"
+
+#define SET_DEBUG_PRIVILEGE TRUE
 
 const string TAG = "ComputerLock";
-
-BOOL SetPrivilege(ProcessHandler procHandler){
-	HANDLE hProcessToken = NULL;
-	HANDLE hProcess = GetCurrentProcess();
-	if (!OpenProcessToken(hProcess, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hProcessToken)) {
-		cout << "Failed to retrieve this process's access token. error:" << procHandler.GetLastErrorAsString(GetLastError()) << endl;
-		return FALSE;
-	}
-	return procHandler.SetPrivilege(hProcessToken, SE_DEBUG_NAME, TRUE);
-}
 
 int main() {
 	TCHAR szFileName[MAX_PATH + 1];
@@ -24,11 +18,20 @@ int main() {
 	GetModuleFileName(NULL, szFileName, MAX_PATH + 1);
 	wcout << szFileName << endl;
 	ProcessHandler procHandler;
-	if(SetPrivilege(procHandler)){
+	BOOL privSet = FALSE;
+
+	LogicalDriveRetriever* driveRetriever = new LogicalDriveRetriever();
+	driveRetriever->MonitorDrive();
+
+	if (SET_DEBUG_PRIVILEGE)
+		privSet = SetPrivilegeByName(SE_DEBUG_NAME, TRUE);
+
+	if(privSet){
 		procHandler.CheckOpenProcesses();
 		MonitorProcessCreation* processCallbackCreator = new MonitorProcessCreation();
 		return 0;
 	}
-	cout << "could not set the privilege" << endl;
+
+	cout << "could not set the privilege, terminating" << endl;
 	return 1;
 }
