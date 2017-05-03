@@ -1,34 +1,22 @@
 #pragma once
 
-#define NO_MORE_ENTRIES 0
+namespace LogicalDriveMonitor {
+	class LogicalDriveRetriever {
+	public:
+		//Class constructor
+		//It should store the current logical drives in the logicalDrives member
+		LogicalDriveRetriever();
 
-class LogicalDriveRetriever {
-public:
-	//Class constructor
-	//It should store the current logical drives in the logicalDrives member
-	LogicalDriveRetriever();
+		void AddDriveMonitor(int driveLetter);
 
-	void AddDriveMonitor(int driveLetter);
+	private:
+		vector<DWORD> logicalDrives;
 
-	BOOL MonitorDrive(LPCWSTR driveLetter);
+		void WaitForNewExternalDrives();
 
-private:
-	vector<DWORD> logicalDrives;
+		void RetrieveCurrentLogicalDrives();
 
-
-	void WaitForNewExternalDrives();
-
-	void RetrieveCurrentLogicalDrives();
-
-	/*Detects if the given logical drive is an external drive*/
-	void DetectExternalDrives(int driveLetter);
-};
-
-class LogicalDrive {
-public:
-	LPCWSTR driveLetter;
-	HANDLE hDir; 
-	LogicalDrive(LPCWSTR driveLetter);
-
-
-};
+		/*Detects if the given logical drive is an external drive*/
+		void DetectExternalDrives(int driveLetter);
+	};
+}
