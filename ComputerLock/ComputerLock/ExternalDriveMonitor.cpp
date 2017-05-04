@@ -3,8 +3,74 @@
 #include "CommonTools.h"
 
 LogicalDriveRetriever::LogicalDriveRetriever() {
+	// buffer for unique volume identifiers
+	char buf[MAX_PATH];
 
-	return;
+	//The maximum length of a path in the volume
+	DWORD lpMaximumComponentLength;
+
+	// flags that describe the file system
+	DWORD dwSysFlags;
+
+	char FileSysNameBuf[MAX_PATH];
+	BOOL test;
+	// handle for the volume search (this is a search handle to use for subsequent calls and NOT a directory handle)
+	HANDLE hVol;
+
+	// Open a scan for volumes.
+	hVol = FindFirstVolume((LPWSTR)buf, MAX_PATH);
+	if (hVol == INVALID_HANDLE_VALUE)
+	{
+		::printf("No volumes found!\n");
+		return ;
+	}
+
+	TCHAR VolumeName[MAX_PATH];
+	// If all the requested information is retrieved, the return value is nonzero.
+	// If not all the requested information is retrieved, the return value is 0 (zero).
+	test = GetVolumeInformation(
+		(LPCWSTR)buf,
+		VolumeName,
+		MAX_PATH,
+		NULL,
+		&lpMaximumComponentLength,
+		&dwSysFlags,
+		(LPWSTR)FileSysNameBuf,
+		MAX_PATH
+	);
+
+	if (test) {
+		::printf("The first volume found: %S\n", buf);
+		::printf("The volume name is: %S \n", VolumeName);
+		while (FindNextVolume(hVol, (LPWSTR)buf, MAX_PATH)) {
+			test = GetVolumeInformation(
+				(LPCWSTR)buf,
+				VolumeName,
+				MAX_PATH,
+				NULL,
+				&lpMaximumComponentLength,
+				&dwSysFlags,
+				(LPWSTR)FileSysNameBuf,
+				MAX_PATH
+			);
+
+			if (test) {
+				::printf("The volume found: %S\n", buf);
+				::printf("The volume name is: %S\n", VolumeName);
+			}
+		}
+	}
+	
+	
+	::printf("The buffer for volume name: %d\n", MAX_PATH);
+	::printf("The max component length: %d\n", lpMaximumComponentLength);
+	::printf("The file system flag: %d\n", dwSysFlags);
+	::printf("The file system: %S\n", FileSysNameBuf);
+	::printf("The buffer for file system name: %d\n", MAX_PATH);
+	if (FindVolumeClose(hVol) != 0)
+		::printf("Handle for the %S closed successfully!\n", buf);
+	else
+		::printf("%S handle failed to close!\n");
 }
 
 BOOL LogicalDriveRetriever::MonitorDrive(LPCWSTR driveLetter) {

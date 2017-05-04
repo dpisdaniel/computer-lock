@@ -13,7 +13,7 @@ public:
 	BOOL MonitorDrive(LPCWSTR driveLetter);
 
 private:
-	vector<DWORD> logicalDrives;
+	//vector<DWORD> logicalDrives;
 
 	BOOL checkAction(DWORD action);
 
@@ -26,10 +26,20 @@ private:
 };
 
 class LogicalDrive {
+/*
+	This class represents a logical drive. It contains all the different "representations" for the drive 
+	and provides an interface that makes monitoring the drive easier
+*/
 public:
-	LPCWSTR driveLetter;
-	HANDLE hDir; 
-	LogicalDrive(LPCWSTR driveLetter);
+	LPCWSTR driveLetter; // The volume root path null terminated string e.g C:/ 
+	HANDLE hVol; // The handle to the volume
+	LPWSTR lpszVolumeName; // The volume GUID path
+	LPDWORD lpVolumeSerialNumber; // The serial number of the volume
 
-
+	/*
+	Receives the volume GUID path null terminated format. The constructor then retrieves and stores all the different 
+	representations of the drive (like its root path, handle, etc)
+	*/
+	LogicalDrive(LPWSTR lpszVolumeName);
+		
 };
