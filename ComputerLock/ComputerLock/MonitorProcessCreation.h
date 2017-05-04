@@ -33,7 +33,8 @@ private:
 	// Begins receiving notifications when __InstanceCreationEvent happens for Win32Process instances
 	int ReceiveEventNotifications();
 
-	/* Deletes all the currently used interface pointers and
+	/* 
+	Deletes all the currently used interface pointers and
 	uninitializes the COM library for this process
 	*/
 	void CleanUp(BOOL cancelAsyncQuery);

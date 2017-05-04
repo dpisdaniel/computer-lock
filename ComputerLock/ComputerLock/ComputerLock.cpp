@@ -17,11 +17,12 @@ int main() {
 
 	GetModuleFileName(NULL, szFileName, MAX_PATH + 1);
 	wcout << szFileName << endl;
+
 	ProcessHandler procHandler;
 	BOOL privSet = FALSE;
 
 	LogicalDriveRetriever* driveRetriever = new LogicalDriveRetriever();
-	driveRetriever->MonitorDrive(_T("C:\\"));
+	//driveRetriever->MonitorDrive(_T("C:\\"));
 
 	if (SET_DEBUG_PRIVILEGE)
 		privSet = SetPrivilegeByName(SE_DEBUG_NAME, TRUE);
