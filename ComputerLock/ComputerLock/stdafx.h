@@ -13,15 +13,23 @@
 #include <string.h>
 #include <stdio.h>
 #include <tchar.h>
+#include <WinSock2.h>
+#include <Ws2tcpip.h>
 #include <Windows.h>
 #include <tlhelp32.h>
 #include <psapi.h>
 #include <wbemidl.h>
 #include <vector>
 #include <wchar.h>
-
+#include <thread>
+#include <time.h>
+#include <chrono>
+#include <fstream>
+#include <iterator>
+#include <sstream>
+#include <locale>
+#include <codecvt>
 #pragma comment(lib, "wbemuuid.lib")
 
 using namespace std;
 
-// TODO: reference additional headers your program requires here

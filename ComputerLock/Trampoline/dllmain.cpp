@@ -1,8 +1,15 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
 #include "mhook.h"
+//#include "../ComputerLock/CommonTools.h"
+//#include "../ComputerLock/Client.h"
 
-
+#define globvar static
+/*
+globvar string PROCESSES_SETTINGS = PROCESS_SETTINGS;
+globvar string FILE_EXTENSION_SETTINGS = FILE_EXT_SETTINGS;
+globvar string FILE_PATH_SETTINGS = FILE_PATHS_SETTINGS;
+*/
 typedef HGDIOBJ(WINAPI * _CreateFile) (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
 
 
@@ -17,21 +24,46 @@ char* encode(const wchar_t* wstr, unsigned int codePage)
 	return encodedStr;
 }
 
-inline bool ends_with(std::string const & value, std::string const & ending)
+inline bool EndsWith(std::string const & value, std::string const & ending)
 {
 	if (ending.size() > value.size()) return false;
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
+/*
+BOOL IsImportant(const string& filePath, const string& settingsPath) {
+	fstream inFile;
+	inFile.open(settingsPath, ios::in);
+	string importantSettings("");
+	inFile >> importantSettings;
+	vector<string> extensions = common::split(importantSettings, SETTINGS_DELIMITER);
+	for (int i = 0; i < extensions.size(); i++) {
+		if (EndsWith(filePath, extensions[i])) {
+			inFile.close();
+			return TRUE;
+		}
+	}
+	inFile.close();
+	return FALSE;
+}
+
+BOOL IsImportantFile(const string& filePath) {
+	// Check extensions first
+	if (IsImportant(filePath, FILE_EXTENSION_SETTINGS))
+		return TRUE;
+	// Check file paths
+	if (IsImportant(filePath, FILE_PATH_SETTINGS))
+		return TRUE;
+	return FALSE;
+}
+*/
 HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
 	char file_path[1024];
 	strcpy_s(file_path, encode(lpFileName, CP_UTF8)); //encode to utf-8
-	
-	if (ends_with(file_path, ".txt"))
+	if (EndsWith(file_path, ".txt"))
 	{
 		//MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);
-		//atleast for now it will return a valid handle but pop a msg box when it gets here
 		//return INVALID_HANDLE_VALUE;
 		//Gets the attached process name, in order to figure out which windows process handles file transfers
 		

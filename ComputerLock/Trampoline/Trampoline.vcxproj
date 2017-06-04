@@ -214,6 +214,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ComputerLock\Client.h" />
+    <ClInclude Include="..\ComputerLock\CommonTools.h" />
     <ClInclude Include="cpu.h" />
     <ClInclude Include="disasm.h" />
     <ClInclude Include="disasm_x86.h" />
@@ -223,6 +225,8 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ComputerLock\Client.cpp" />
+    <ClCompile Include="..\ComputerLock\CommonTools.cpp" />
     <ClCompile Include="cpu.c" />
     <ClCompile Include="disasm.c" />
     <ClCompile Include="disasm_x86.c" />

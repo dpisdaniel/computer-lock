@@ -76,7 +76,7 @@ LogicalDriveRetriever::LogicalDriveRetriever() {
 BOOL LogicalDriveRetriever::MonitorDrive(LPCWSTR driveLetter) {
 	HANDLE hDir = CreateFile(driveLetter, FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 	if (hDir == INVALID_HANDLE_VALUE) {
-		cout << "Failed to open the drive for monitoring. error: " << GetLastErrorAsString(GetLastError()) << endl;
+		cout << "Failed to open the drive for monitoring. error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 		return FALSE;
 	}
 
@@ -115,7 +115,7 @@ BOOL LogicalDriveRetriever::MonitorDrive(LPCWSTR driveLetter) {
 					wcout << _T("File ") << pswzFullFilePath << _T(" Successfully deleted") << endl;
 				else {
 					wcout << _T("Error deleting file ") << pswzFullFilePath << endl;
-					cout << "Error: " << GetLastErrorAsString(GetLastError()) << endl;
+					cout << "Error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 				}
 			}
 			
@@ -137,7 +137,7 @@ BOOL LogicalDriveRetriever::MonitorDrive(LPCWSTR driveLetter) {
 						wcout << _T("File ") << pswzFullFilePath << _T(" Successfully deleted") << endl;
 					else {
 						wcout << _T("Error deleting file ") << pswzFullFilePath << endl;
-						cout << "Error: " << GetLastErrorAsString(GetLastError()) << endl;
+						cout << "Error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 					}
 				}
 				wchar_t* pwszFileName = pStrFileNotifyInfo->FileName;

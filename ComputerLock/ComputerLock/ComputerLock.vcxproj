@@ -208,6 +208,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Client.h" />
     <ClInclude Include="CommonTools.h" />
     <ClInclude Include="EventSink.h" />
     <ClInclude Include="ExternalDriveMonitor.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="CommonTools.cpp" />
     <ClCompile Include="ComputerLock.cpp" />
     <ClCompile Include="EventSink.cpp" />

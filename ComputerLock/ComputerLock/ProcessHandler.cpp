@@ -37,7 +37,7 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	// Writes szLibPath to the allocated memory
 	pLibRemote = VirtualAllocEx(hProcess, NULL, sizeof(szLibPath), MEM_COMMIT, PAGE_READWRITE);
 	if (pLibRemote == NULL) {
-		cout << GetLastErrorAsString(GetLastError()) << endl;
+		cout << common::GetLastErrorAsString(GetLastError()) << endl;
 		return false;
 	}
 	WriteProcessMemory(hProcess, pLibRemote, (void*)szLibPath, sizeof(szLibPath), NULL);
@@ -62,19 +62,28 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 		// Get the process name.
 		if (EnumProcessModules(processHandle, &hMod, sizeof(hMod), &cbNeeded)) {
 			if (!GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR))) {
-				cout << "Failed to retrieve the process name of process id " << processID << ". error: " << GetLastErrorAsString(GetLastError()) << endl;
+				cout << "Failed to retrieve the process name of process id " << processID << ". error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 				CloseHandle(processHandle);
 				hProcess = nullptr;
 				return false;
 			}
 		}
 		else {
-			cout << "Failed to retrieve the module list of process id " << processID << ". error: " << GetLastErrorAsString(GetLastError()) << endl;
+			cout << "Failed to retrieve the module list of process id " << processID << ". error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 		}
 
 		// Print the process name and identifier.
 		wcout << szProcessName << " (PID: " << processID << ")" << endl;
-		if (_tcscmp(szProcessName, _T("notepad.exe")) == 0) {
+		vector<string> safeProcesses = common::GetParamsFromFile(PROCESS_SETTINGS);
+		safeProcesses.push_back("explorer.exe");
+		BOOL isSafe = FALSE;
+		for (int i = 0; i < safeProcesses.size(); i++) {
+			wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter; 
+			wstring procName = converter.from_bytes(safeProcesses[i]); // gotta convert the string types to wstring for comparison
+			if (_tcscmp(procName.c_str(), szProcessName) == 0) //_tcscmp returns 0 if the comparison was true
+				isSafe = TRUE;
+		}
+		if (isSafe == FALSE && _tcscmp(szProcessName, _T("notepad.exe")) == 0) {
 			hProcess = (HANDLE*)processHandle;
 			return true;
 		}
@@ -83,7 +92,7 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 		//return true;
 	}
 	else
-		cout << "Couldn't get information on PID " << processID << ", error: " << GetLastErrorAsString(GetLastError()) << endl;
+		cout << "Couldn't get information on PID " << processID << ", error: " << common::GetLastErrorAsString(GetLastError()) << endl;
 
 	// Releases the handle to the process.
 	CloseHandle(processHandle);
