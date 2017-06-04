@@ -207,6 +207,7 @@ void UpdateLoop::StartLoop() {
 
 void UpdateLoop::LoopForever() {
 	std::chrono::seconds wait_interval(this->interval_);
+	cout << "token is " << RetrieveToken() << endl;
 	while (true) { //TODO: If server restarts the socket needs to be refreshed because this will get stuck in socket error 10054
 		int result = SendBytes(SETTINGS_REQUEST_MESSAGE(RetrieveToken()));
 		if (result == SOCKET_ERROR) {

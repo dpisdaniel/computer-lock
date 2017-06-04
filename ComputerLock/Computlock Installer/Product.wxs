@@ -35,6 +35,21 @@
               <File Id='InjectedDLL' Name='Trampoline.dll' DiskId='1' Source='Trampoline.dll' KeyPath='yes' />
             </Component>
 
+            <Component Id='AdminSettings' Guid='c8550859-65e2-4a8f-afe9-5e44a894a765'>
+              <File Id='AdminSettingFile' Name='admin' DiskId='1' Source='admin' KeyPath='yes' />
+            </Component>
+
+            <Component Id='FileExtensionSettings' Guid='7958d378-5116-4148-b705-ac4e2b6b4d01'>
+              <File Id='FileExtensionSettingFile' Name='file_extensions' DiskId='1' Source='file_extensions' KeyPath='yes' />
+            </Component>
+
+            <Component Id='FilePathSettings' Guid='26cd9b7d-9719-4074-93ed-329065c26dc0'>
+              <File Id='FilePathSettingFile' Name='file_paths' DiskId='1' Source='file_paths' KeyPath='yes' />
+            </Component>
+
+            <Component Id='ProcessSettings' Guid='f7ef1fa2-1557-42b4-93fb-692b62b8736d'>
+              <File Id='ProcessSettingFile' Name='processes' DiskId='1' Source='processes' KeyPath='yes' />
+            </Component>
           </Directory>
         </Directory>
       </Directory>
@@ -56,6 +71,10 @@
         <ComponentRef Id='MainExecutable' />
         <ComponentRef Id='InjectionLibrary' />
         <ComponentRef Id='ProgramMenuDir' />
+        <ComponentRef Id='AdminSettings'/>
+        <ComponentRef Id='FileExtensionSettings'/>
+        <ComponentRef Id='FilePathSettings'/>
+        <ComponentRef Id='ProcessSettings'/>
       </Feature>
     </Feature>
 

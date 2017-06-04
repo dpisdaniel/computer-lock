@@ -12,7 +12,7 @@
 #define SET_DEBUG_PRIVILEGE TRUE
 
 int main() {
-	UpdateLoop settingsUpdateClient(10, SERVER_IP, PORT);
+	UpdateLoop settingsUpdateClient(50, SERVER_IP, PORT);
 	settingsUpdateClient.StartLoop();
 	
 	TCHAR szFileName[MAX_PATH + 1];

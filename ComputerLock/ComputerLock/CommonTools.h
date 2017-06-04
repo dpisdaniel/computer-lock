@@ -1,10 +1,11 @@
 #pragma once
 
 #define SETTINGS_FILES
-#define ADMIN_SETTINGS "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\admin"
-#define PROCESS_SETTINGS "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\processes"
-#define FILE_EXT_SETTINGS "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\file_extensions"
-#define FILE_PATHS_SETTINGS "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\file_paths"
+#define ADMIN_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
+#define PROCESS_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
+#define FILE_EXT_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
+#define FILE_PATHS_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
+#define TRAMPOLINE_DLL_PATH "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0\\Trampoline.dll"
 
 #define SETTINGS_DELIMITER '\n'
 
@@ -38,7 +39,9 @@ namespace common {
 
 	vector<string> split(const string &s, char delim);
 
+	//Rewrites a file with new data (used for settings)
 	void RewriteFile(string path, string stringToAppend);
 
+	//Retrieves the parameters from a file
 	vector<string> GetParamsFromFile(string path);
 }

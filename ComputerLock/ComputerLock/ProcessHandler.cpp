@@ -14,6 +14,7 @@ void ProcessHandler::CheckOpenProcesses() {
 	//Checks for the potential of all the currently opened processes
 	for (unsigned long int i = 0; i < numberOfProcessIdentifiers; i++) {
 		HANDLE* currentProcess = NULL;
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		if (CheckProcessPotential(allProcessIdentifiers[i], currentProcess)) {
 			cout << currentProcess << " " << &currentProcess << endl;
 			InjectHookDLL(currentProcess);
@@ -30,7 +31,7 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
 	HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-	strcpy_s(szLibPath, "C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\Trampoline.dll");
+	strcpy_s(szLibPath, TRAMPOLINE_DLL_PATH);
 	cout << szLibPath << endl;
 
 	// Allocates memory in the remote process for szLibPath and then
@@ -83,7 +84,7 @@ BOOL ProcessHandler::CheckProcessPotential(DWORD processID, HANDLE*& hProcess) {
 			if (_tcscmp(procName.c_str(), szProcessName) == 0) //_tcscmp returns 0 if the comparison was true
 				isSafe = TRUE;
 		}
-		if (isSafe == FALSE && _tcscmp(szProcessName, _T("notepad.exe")) == 0) {
+		if (isSafe == FALSE) {
 			hProcess = (HANDLE*)processHandle;
 			return true;
 		}
