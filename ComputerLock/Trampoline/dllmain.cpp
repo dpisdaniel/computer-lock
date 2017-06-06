@@ -1,15 +1,16 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
 #include "mhook.h"
-//#include "../ComputerLock/CommonTools.h"
+#include "../ComputerLock/CommonTools.h"
 //#include "../ComputerLock/Client.h"
 
 #define globvar static
-/*
-globvar string PROCESSES_SETTINGS = PROCESS_SETTINGS;
-globvar string FILE_EXTENSION_SETTINGS = FILE_EXT_SETTINGS;
-globvar string FILE_PATH_SETTINGS = FILE_PATHS_SETTINGS;
-*/
+
+globvar wstring PROCESSES_SETTINGS = PROCESS_SETTINGS;
+globvar wstring FILE_EXTENSION_SETTINGS = FILE_EXT_SETTINGS;
+globvar wstring FILE_PATH_SETTINGS = FILE_PATHS_SETTINGS;
+globvar const int fileDataBufferLength = 10240;
+
 typedef HGDIOBJ(WINAPI * _CreateFile) (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
 
 
@@ -30,20 +31,20 @@ inline bool EndsWith(std::string const & value, std::string const & ending)
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
-/*
-BOOL IsImportant(const string& filePath, const string& settingsPath) {
-	fstream inFile;
-	inFile.open(settingsPath, ios::in);
-	string importantSettings("");
-	inFile >> importantSettings;
+BOOL IsImportant(const string& filePath, const wstring& settingsPath) {
+	HANDLE hFile = ActualCreateFile(settingsPath.c_str(), GENERIC_READ, FILE_SHARE_DELETE | FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	char fileDataBuffer[fileDataBufferLength];
+	DWORD nRead;
+	BOOL res = ReadFile(hFile, fileDataBuffer, fileDataBufferLength - 1, &nRead, NULL);
+	fileDataBuffer[nRead] = '\0';
+	string importantSettings(fileDataBuffer);
 	vector<string> extensions = common::split(importantSettings, SETTINGS_DELIMITER);
 	for (int i = 0; i < extensions.size(); i++) {
+		extensions[i].erase(remove_if(extensions[i].begin(), extensions[i].end(), isspace), extensions[i].end());
 		if (EndsWith(filePath, extensions[i])) {
-			inFile.close();
 			return TRUE;
 		}
 	}
-	inFile.close();
 	return FALSE;
 }
 
@@ -52,21 +53,22 @@ BOOL IsImportantFile(const string& filePath) {
 	if (IsImportant(filePath, FILE_EXTENSION_SETTINGS))
 		return TRUE;
 	// Check file paths
-	if (IsImportant(filePath, FILE_PATH_SETTINGS))
-		return TRUE;
+	//if (IsImportant(filePath, FILE_PATH_SETTINGS))
+		//return TRUE;
 	return FALSE;
 }
-*/
+
 HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
 	char file_path[1024];
 	strcpy_s(file_path, encode(lpFileName, CP_UTF8)); //encode to utf-8
-	if (EndsWith(file_path, ".txt"))
+
+	if (IsImportantFile(string(file_path)))
 	{
 		//MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);
 		//return INVALID_HANDLE_VALUE;
 		//Gets the attached process name, in order to figure out which windows process handles file transfers
-		
+
 		HANDLE processHandle = GetCurrentProcess();
 		TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
 		HMODULE hMod;
@@ -76,6 +78,8 @@ HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD d
 		{
 			GetModuleBaseName(processHandle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
 		}
+
+		MessageBoxW(NULL, (LPCWSTR)szProcessName, NULL, NULL);
 		return INVALID_HANDLE_VALUE;
 	}
 	return ActualCreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);

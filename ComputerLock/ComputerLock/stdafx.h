@@ -29,7 +29,10 @@
 #include <sstream>
 #include <locale>
 #include <codecvt>
+#include <Shlobj.h>
+#include <algorithm>
 #pragma comment(lib, "wbemuuid.lib")
+#pragma comment(lib, "Advapi32.lib")
 
 using namespace std;
 

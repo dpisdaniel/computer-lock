@@ -92,17 +92,25 @@ namespace common {
 		return elems;
 	}
 
-	void RewriteFile(string path, string stringToAppend) {
+	void RewriteFile(wstring path, string stringToAppend) {
 		ofstream outfile;
 		outfile.open(path);
 		outfile << stringToAppend;
 	}
 
-	vector<string> GetParamsFromFile(string path) {
+	vector<string> GetParamsFromFile(wstring path) {
 		ifstream infile;
 		infile.open(path);
 		string paramsString("");
 		infile >> paramsString;
 		return split(paramsString, SETTINGS_DELIMITER);
+	}
+
+	wstring GetPathWithProgramFiles(wstring path, const KNOWNFOLDERID rfid) {
+		PWSTR programFilesPath;
+		HRESULT res = SHGetKnownFolderPath(rfid, KF_FLAG_DEFAULT, NULL, &programFilesPath);
+		if (res != S_OK)
+			throw "Program Files path could not be found";
+		return wstring(programFilesPath) + path;
 	}
 }

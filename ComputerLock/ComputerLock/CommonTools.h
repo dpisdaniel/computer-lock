@@ -1,11 +1,13 @@
 #pragma once
 
 #define SETTINGS_FILES
-#define ADMIN_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
-#define PROCESS_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
-#define FILE_EXT_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
-#define FILE_PATHS_SETTINGS "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0"
-#define TRAMPOLINE_DLL_PATH "C:\\Program Files (x86)\\Daniel\\ComputerLock 1.0\\Trampoline.dll"
+#define ADMIN_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\admin", FOLDERID_ProgramFilesX64)
+#define PROCESS_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\processes", FOLDERID_ProgramFilesX64)
+#define FILE_EXT_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\file_extensions", FOLDERID_ProgramFilesX64)
+#define FILE_PATHS_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\file_paths", FOLDERID_ProgramFilesX64)
+#define TRAMPOLINE_DLL_PATH L"C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\Trampoline.dll" //common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\Trampoline.dll", FOLDERID_ProgramFilesX64)
+
+#define SYSTEM_PATH(windir) GetWindowsDirectory(windir, MAX_PATH)
 
 #define SETTINGS_DELIMITER '\n'
 
@@ -31,17 +33,22 @@ namespace common {
 	// Turns an array of chars to an array of bytes
 	void CharToByte(char* chars, byte* bytes, unsigned int count);
 
-	//Turns an array of bytes to an array of chars
+	// Turns an array of bytes to an array of chars
 	void ByteToChar(byte* bytes, char* chars, unsigned int count);
 
+	// Splits a string into the result using a given delimiter
 	template<typename Out>
 	void split(const string &s, char delim, Out result);
 
+	// Returns a split string vector using a given delimiter
 	vector<string> split(const string &s, char delim);
 
-	//Rewrites a file with new data (used for settings)
-	void RewriteFile(string path, string stringToAppend);
+	// Rewrites a file with new data (used for settings)
+	void RewriteFile(wstring path, string stringToAppend);
 
-	//Retrieves the parameters from a file
-	vector<string> GetParamsFromFile(string path);
+	// Retrieves the parameters from a file
+	vector<string> GetParamsFromFile(wstring path);
+
+	// Prepends the program files x64 path to the given path
+	wstring GetPathWithProgramFiles(wstring path, const KNOWNFOLDERID rfid);
 }

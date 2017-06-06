@@ -5,7 +5,7 @@
     
     <Package Id='*' Keywords='Installer' Description="Daniel's ComputerLock 1.0 Installer"
       Comments='ComputerLock is mine bwahahaha' Manufacturer='Daniel'
-      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+      InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252' Platform="x64"/>
 
     <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
     <Property Id='DiskPrompt' Value="Daniel's ComputerLock 1.0 Installation [1]" />
@@ -20,34 +20,33 @@
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     
     <Directory Id='TARGETDIR' Name='SourceDir'>
-      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+      <Directory Id='ProgramFiles64Folder' Name='PFiles'>
         <Directory Id='Daniel' Name='Daniel'>
           <Directory Id='INSTALLDIR' Name='ComputerLock 1.0'>
 
-            <Component Id='MainExecutable' Guid='9ad54690-afbe-4827-81ee-c713e1cb5648'>
+            <Component Id='MainExecutable' Guid='9ad54690-afbe-4827-81ee-c713e1cb5648' Win64='yes'>
               <File Id='ComputerLockEXE' Name='ComputerLock.exe' DiskId='1' Source='ComputerLock.exe' KeyPath='yes'>
                 <Shortcut Id="startmenuComputerLock" Directory="ProgramMenuDir" Name="ComputerLock 1.0" WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
-                <Shortcut Id="desktopComputerLock" Directory="DesktopFolder" Name="ComputerLock 1.0" WorkingDirectory='INSTALLDIR' Icon="ComputerLock.exe" IconIndex="0" Advertise="yes" />
               </File>
             </Component>
 
-            <Component Id='InjectionLibrary' Guid='072323ae-edeb-4640-84de-9e979751f622'>
+            <Component Id='InjectionLibrary' Guid='072323ae-edeb-4640-84de-9e979751f622' Win64='yes'>
               <File Id='InjectedDLL' Name='Trampoline.dll' DiskId='1' Source='Trampoline.dll' KeyPath='yes' />
             </Component>
 
-            <Component Id='AdminSettings' Guid='c8550859-65e2-4a8f-afe9-5e44a894a765'>
+            <Component Id='AdminSettings' Guid='c8550859-65e2-4a8f-afe9-5e44a894a765' Win64='yes'>
               <File Id='AdminSettingFile' Name='admin' DiskId='1' Source='admin' KeyPath='yes' />
             </Component>
 
-            <Component Id='FileExtensionSettings' Guid='7958d378-5116-4148-b705-ac4e2b6b4d01'>
+            <Component Id='FileExtensionSettings' Guid='7958d378-5116-4148-b705-ac4e2b6b4d01' Win64='yes'>
               <File Id='FileExtensionSettingFile' Name='file_extensions' DiskId='1' Source='file_extensions' KeyPath='yes' />
             </Component>
 
-            <Component Id='FilePathSettings' Guid='26cd9b7d-9719-4074-93ed-329065c26dc0'>
+            <Component Id='FilePathSettings' Guid='26cd9b7d-9719-4074-93ed-329065c26dc0' Win64='yes'>
               <File Id='FilePathSettingFile' Name='file_paths' DiskId='1' Source='file_paths' KeyPath='yes' />
             </Component>
 
-            <Component Id='ProcessSettings' Guid='f7ef1fa2-1557-42b4-93fb-692b62b8736d'>
+            <Component Id='ProcessSettings' Guid='f7ef1fa2-1557-42b4-93fb-692b62b8736d' Win64='yes'>
               <File Id='ProcessSettingFile' Name='processes' DiskId='1' Source='processes' KeyPath='yes' />
             </Component>
           </Directory>

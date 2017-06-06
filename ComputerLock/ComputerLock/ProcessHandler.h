@@ -31,4 +31,8 @@ private:
 	//Retrieves the current working directory of the executable (without the executable's file name)
 	wstring ExePath();
 
+	// Checks if the given processHandle is a system process.
+	BOOL IsSystemProcess(HANDLE processHandle);
+
+	BOOL IsProcessSafe(TCHAR* szProcessName);
 };

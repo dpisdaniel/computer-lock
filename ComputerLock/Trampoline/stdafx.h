@@ -23,3 +23,6 @@ using namespace std;
 #include <thread>
 #include <vector>
 #include <sstream>
+#include <Shlobj.h>
+#include <algorithm>
+#include <tchar.h>
