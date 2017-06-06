@@ -117,10 +117,8 @@ int MonitorProcessCreation::ReceiveEventNotifications() {
 		CleanUp(cancelAsyncQuery);
 		return FALSE;
 	}
-	string input;
-	cout << "Enter anything to exit:" << endl;
-	cin >> input;
-
+	while(true)
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	//hr = pSvc->CancelAsyncCall(pStubSink);
 	cancelAsyncQuery = true;
 	CleanUp(cancelAsyncQuery);

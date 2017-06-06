@@ -30,7 +30,7 @@ int ProcessHandler::InjectHookDLL(HANDLE hProcess)
 	void*  pLibRemote = 0;	// the address (in the remote process) where szLibPath will be copied to
 	HMODULE hKernel32 = GetModuleHandle(TEXT("Kernel32"));
 
-	wcscpy_s(szLibPath, TRAMPOLINE_DLL_PATH);//.c_str());
+	wcscpy_s(szLibPath, TRAMPOLINE_DLL_PATH.c_str());
 	cout << szLibPath << endl;
 
 	// Allocates memory in the remote process for szLibPath and then

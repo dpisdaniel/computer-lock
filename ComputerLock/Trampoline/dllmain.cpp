@@ -62,7 +62,7 @@ HGDIOBJ WINAPI HookCreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD d
 {
 	char file_path[1024];
 	strcpy_s(file_path, encode(lpFileName, CP_UTF8)); //encode to utf-8
-
+	
 	if (IsImportantFile(string(file_path)))
 	{
 		//MessageBoxA(NULL, (LPCSTR)file_path, NULL, NULL);

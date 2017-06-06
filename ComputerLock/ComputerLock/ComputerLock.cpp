@@ -11,13 +11,9 @@
 
 #define SET_DEBUG_PRIVILEGE TRUE
 
-inline bool EndsWith(std::string const & value, std::string const & ending)
+int main()
 {
-	if (ending.size() > value.size()) return false;
-	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
-int main() {
+	FreeConsole();
 	UpdateLoop settingsUpdateClient(50, SERVER_IP, PORT);
 	settingsUpdateClient.StartLoop();
 	
@@ -38,9 +34,10 @@ int main() {
 	if(privSet){
 		procHandler.CheckOpenProcesses();
 		MonitorProcessCreation* processCallbackCreator = new MonitorProcessCreation();
+		MessageBoxA(NULL, (LPCSTR)"terminating", NULL, NULL);
 		return 0;
 	}
-
+	MessageBoxA(NULL, (LPCSTR)"Terminating", NULL, NULL);
 	cout << "could not set the privilege, terminating" << endl;
 	return 1;
 }

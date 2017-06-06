@@ -5,7 +5,7 @@
 #define PROCESS_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\processes", FOLDERID_ProgramFilesX64)
 #define FILE_EXT_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\file_extensions", FOLDERID_ProgramFilesX64)
 #define FILE_PATHS_SETTINGS common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\file_paths", FOLDERID_ProgramFilesX64)
-#define TRAMPOLINE_DLL_PATH L"C:\\Users\\Daniel\\Documents\\Visual Studio 2015\\Projects\\ComputerLock\\ComputerLock\\x64\\Debug\\Trampoline.dll" //common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\Trampoline.dll", FOLDERID_ProgramFilesX64)
+#define TRAMPOLINE_DLL_PATH common::GetPathWithProgramFiles(L"\\Daniel\\ComputerLock 1.0\\Trampoline.dll", FOLDERID_ProgramFilesX64)
 
 #define SYSTEM_PATH(windir) GetWindowsDirectory(windir, MAX_PATH)
 
